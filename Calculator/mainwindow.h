@@ -20,7 +20,7 @@ public:
 private slots:
     void getDigit();
     void clearResult();
-    void checkOperatoin();
+    void checkOperation();
     void getResult();
 
 private:

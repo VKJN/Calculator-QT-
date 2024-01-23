@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <iostream>
+#include <math.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,16 +21,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_8, SIGNAL(clicked()),this,SLOT(getDigit()));
     connect(ui->pushButton_9, SIGNAL(clicked()),this,SLOT(getDigit()));
     connect(ui->pushButton_point, SIGNAL(clicked()),this,SLOT(getDigit()));
-    connect(ui->pushButton_C, SIGNAL(clicked()),this,SLOT(clearResult()));
 
-    connect(ui->pushButton_plus, SIGNAL(clicked()),this,SLOT(checkOperatoin()));
-    connect(ui->pushButton_minus, SIGNAL(clicked()),this,SLOT(checkOperatoin()));
-    //connect(ui->pushButton_CE, SIGNAL(clicked()),this,SLOT(getResult()));
-    connect(ui->pushButton_division, SIGNAL(clicked()),this,SLOT(checkOperatoin()));
+    connect(ui->pushButton_C, SIGNAL(clicked()),this,SLOT(clearResult()));
     connect(ui->pushButton_equals, SIGNAL(clicked()),this,SLOT(getResult()));
-    connect(ui->pushButton_multiplication, SIGNAL(clicked()),this,SLOT(checkOperatoin()));
-    //connect(ui->pushButton_xy, SIGNAL(clicked()),this,SLOT(checkOperatoin()));
-    //connect(ui->pushButton_x2, SIGNAL(clicked()),this,SLOT(checkOperatoin()));
+
+    connect(ui->pushButton_plus, SIGNAL(clicked()),this,SLOT(checkOperation()));
+    connect(ui->pushButton_minus, SIGNAL(clicked()),this,SLOT(checkOperation()));
+    connect(ui->pushButton_division, SIGNAL(clicked()),this,SLOT(checkOperation()));
+    connect(ui->pushButton_multiplication, SIGNAL(clicked()),this,SLOT(checkOperation()));
+    connect(ui->pushButton_xy, SIGNAL(clicked()),this,SLOT(checkOperation()));
+
+    connect(ui->pushButton_sqrt, SIGNAL(clicked()), this, SLOT(checkOperation()));
+    connect(ui->pushButton_x2, SIGNAL(clicked()), this, SLOT(checkOperation()));
 }
 
 MainWindow::~MainWindow()
@@ -43,14 +45,20 @@ void MainWindow::getDigit()
     QPushButton* btn = (QPushButton*)sender();
     if(ui->Field->text() == "0"){
         if(btn->text() != 0){
-            ui->Field->setText("");
+            ui->Field->setText(btn->text());
         }
     }
-    //if(btn->text() == "."){
-
-    //}
-    QString field = ui->Field->text() + btn ->text();
-    ui->Field->setText(field);
+    else if(btn->text() == "."){
+        QString str = ui->Field->text();
+        if(str.count(".") == 0){
+            QString field = ui->Field->text() + btn ->text();
+            ui->Field->setText(field);
+        }
+    }
+    else {
+        QString field = ui->Field->text() + btn ->text();
+        ui->Field->setText(field);
+    }
 }
 
 void MainWindow::clearResult()
@@ -59,16 +67,22 @@ void MainWindow::clearResult()
     operation = "";
 }
 
-void MainWindow::checkOperatoin()
+void MainWindow::checkOperation()
 {
-     QPushButton* btn = (QPushButton*)sender();
-     operation = btn->text();
-     prev = ui->Field->text();
+    QPushButton* btn = (QPushButton*)sender();
+    operation = btn->text();
+    prev = ui->Field->text();
+
+    if(operation == "sqrt" || operation == "x^2"){
+        getResult();
+    }
+
+    else{
      ui->Field->setText("0");
+    }
 }
 
-void MainWindow::getResult()
-{
+void MainWindow::getResult(){
     float num1 = prev.toFloat();
     float num2 = ui->Field->text().toFloat();
     float result;
@@ -87,19 +101,18 @@ void MainWindow::getResult()
         break;
     }
 
-    //if(operation == "x^y"){
-    //    result = pow(num1, num2);
-    //}
+    if (operation == "sqrt") {
+        result = pow(num1, 0.5);
+    }
 
-    //else if(operation == "x^2"){
-    //    result = num1 * num1;
-    //}
+    else if (operation == "x^2") {
+        result = pow(num1, 2);
+    }
 
-    //else{
-    //    QString str = ui->Field->text();
-        //str = str.remove((str.size() - 1));
-    //    ui->Field->setText(str);
-    //}
+    else if (operation == "x^y") {
+        result = pow(num1, num2);
+    }
 
     ui->Field->setNum(result);
+    num1 = num2;
 }

@@ -17,7 +17,7 @@
    <string notr="true">background-color: rgb(61, 61, 61);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton_CE">
+   <widget class="QPushButton" name="pushButton_sqrt">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -36,7 +36,7 @@
 background-color: rgb(255, 85, 0);</string>
     </property>
     <property name="text">
-     <string>CE</string>
+     <string>sqrt</string>
     </property>
     <property name="iconSize">
      <size>
